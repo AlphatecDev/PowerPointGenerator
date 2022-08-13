@@ -21,6 +21,12 @@ const ProviderPowerPoint = ({ children }) => {
   const [slides, setSlides] = useState([state]);
   const [slideEditor, setSlideEditor] = useState([]);
   const [resetState, setResetState] = useState(state);
+  const [empresas, setEmpresas] = useState([]);
+  const [campanhas, setCampanhas] = useState([]);
+  const [request, setRequest] = useState({
+    empresasId: null,
+    campanhaId: null,
+  });
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -53,6 +59,163 @@ const ProviderPowerPoint = ({ children }) => {
     }
   }, [state]);
 
+  const handleChangeId = ({ target }) => {
+    const { name, value } = target;
+    setRequest({
+      ...request,
+      [name]: value,
+    });
+  };
+
+  useEffect(() => {
+    async function requestCampanhas() {
+      function appendEmpresas(data) {
+        setEmpresas(...empresas, data);
+      }
+      const requestBody = {
+        email: "gleybson@dp0.com.br",
+        password: "gleybson@dp0.com.br",
+      };
+      await fetch("https://datasend.orquestraerp.com/api/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      })
+        .then((e) => e.json())
+        .then((e) => e.data.token)
+        .then((e) => window.sessionStorage.setItem("token", e));
+
+      await fetch("https://datasend.orquestraerp.com/api/empresas", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+        },
+      })
+        .then((e) => e.json())
+        .then((e) => appendEmpresas(e.data));
+    }
+    requestCampanhas();
+  }, []);
+
+  useEffect(() => {
+    if (request.empresasId) {
+      async function requestCampanha() {
+        function appendCampanhas(data) {
+          setCampanhas(...campanhas, data);
+        }
+        await fetch(
+          `https://datasend.orquestraerp.com/api/Campanhas/ObterCampanhaPorEmpresa?empresaId=${request.empresasId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+            },
+          }
+        )
+          .then((e) => e.json())
+          .then((e) => appendCampanhas(e.data));
+      }
+      requestCampanha();
+    }
+    console.log(request.empresasId);
+  }, [request.empresasId]);
+
+  useEffect(() => {
+    async function semanaImpressions() {
+      function ArrayReduceImpressions(data) {
+        return data.reduce(
+          (total, current) => {
+            if (current.semana === "Segunda") {
+              total.segunda += parseInt(current.impressions);
+              return total;
+            } else if (current.semana === "Terça") {
+              total.terca += parseInt(current.impressions);
+              return total;
+            } else if (current.semana === "Quarta") {
+              total.quarta += parseInt(current.impressions);
+              return total;
+            } else if (current.semana === "Quinta") {
+              total.quinta += parseInt(current.impressions);
+              return total;
+            } else if (current.semana === "Sexta") {
+              total.sexta += parseInt(current.impressions);
+              return total;
+            } else if (current.semana === "Sabado") {
+              total.sabado += parseInt(current.impressions);
+              return total;
+            } else if (current.semana === "Domingo") {
+              total.domingo += parseInt(current.impressions);
+              return total;
+            } else {
+              return total;
+            }
+          },
+          { ...Semana }
+        );
+      }
+
+      function ArrayReduceClicks(data) {
+        return data.reduce(
+          (total, current) => {
+            if (current.semana === "Segunda") {
+              total.segunda += parseInt(current.clicks);
+              return total;
+            } else if (current.semana === "Terça") {
+              total.terca += parseInt(current.clicks);
+              return total;
+            } else if (current.semana === "Quarta") {
+              total.quarta += parseInt(current.clicks);
+              return total;
+            } else if (current.semana === "Quinta") {
+              total.quinta += parseInt(current.clicks);
+              return total;
+            } else if (current.semana === "Sexta") {
+              total.sexta += parseInt(current.clicks);
+              return total;
+            } else if (current.semana === "Sabado") {
+              total.sabado += parseInt(current.clicks);
+              return total;
+            } else if (current.semana === "Domingo") {
+              total.domingo += parseInt(current.clicks);
+              return total;
+            } else {
+              return total;
+            }
+          },
+          { ...Semana }
+        );
+      }
+
+      let Semana = {
+        segunda: 0,
+        terca: 0,
+        quarta: 0,
+        quinta: 0,
+        sexta: 0,
+        sabado: 0,
+        domingo: 0,
+      };
+
+      await fetch(
+        `https://datasend.orquestraerp.com/api/DadosYahoo/ObterDadosPorEmpresaCampanha?empresaId=${request.empresasId}&campanhaId=${request.campanhaId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+          },
+        }
+      )
+        .then((e) => e.json())
+        .then((e) => e.data)
+        .then((e) => {
+          console.log(ArrayReduceClicks(e));
+          console.log(ArrayReduceImpressions(e));
+        })
+        .catch((e) => console.log(e, "caiu no catch"));
+    }
+    semanaImpressions();
+  }, [request.campanhaId]);
+
   const contextValue = {
     resetState,
     setResetState,
@@ -71,6 +234,13 @@ const ProviderPowerPoint = ({ children }) => {
     setEditPageName,
     slideEditor,
     setSlideEditor,
+    handleChangeId,
+    empresas,
+    setEmpresas,
+    request,
+    setRequest,
+    campanhas,
+    setCampanhas,
   };
 
   return <context.Provider value={contextValue}>{children}</context.Provider>;
