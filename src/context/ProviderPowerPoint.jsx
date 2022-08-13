@@ -12,6 +12,8 @@ const ProviderPowerPoint = ({ children }) => {
     fontSize: "font-xl",
     fontColor: "black",
     fontWeight: "normal",
+    apiInformationClicks: null,
+    apiInformationImpressions: null,
   });
 
   const [preview, setPreview] = useState([]);
@@ -208,8 +210,7 @@ const ProviderPowerPoint = ({ children }) => {
         .then((e) => e.json())
         .then((e) => e.data)
         .then((e) => {
-          console.log(ArrayReduceClicks(e));
-          console.log(ArrayReduceImpressions(e));
+          setState({...state, apiInformationImpressions : ArrayReduceImpressions(e),apiInformationClicks: ArrayReduceClicks(e)})
         })
         .catch((e) => console.log(e, "caiu no catch"));
     }
