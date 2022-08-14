@@ -21,7 +21,7 @@ const ProviderPowerPoint = ({ children }) => {
   const [apresentation, setApresentation] = useState(true);
   const [editPageName, setEditPageName] = useState(false);
   const [slides, setSlides] = useState([state]);
-  const [slideEditor, setSlideEditor] = useState([]);
+  const [slideEditor, setSlideEditor] = useState(state);
   const [resetState, setResetState] = useState(state);
   const [empresas, setEmpresas] = useState([]);
   const [campanhas, setCampanhas] = useState([]);
@@ -52,6 +52,16 @@ const ProviderPowerPoint = ({ children }) => {
       reader.readAsDataURL(file);
     }
   };
+
+  useEffect(() => {
+    if (state.apiInformationClicks || state.apiInformationImpressions) {
+      const newCampanha = slides.find(({ id }) => id === indexPreview);
+      newCampanha["apiInformationClicks"] = state.apiInformationClicks;
+      newCampanha["apiInformationImpressions"] =
+        state.apiInformationImpressions;
+      setSlideEditor(newCampanha);
+    }
+  }, [state.apiInformationClicks || state.apiInformationImpressions]);
 
   useEffect(() => {
     if (state.image) {
@@ -210,7 +220,11 @@ const ProviderPowerPoint = ({ children }) => {
         .then((e) => e.json())
         .then((e) => e.data)
         .then((e) => {
-          setState({...state, apiInformationImpressions : ArrayReduceImpressions(e),apiInformationClicks: ArrayReduceClicks(e)})
+          setState({
+            ...state,
+            apiInformationImpressions: ArrayReduceImpressions(e),
+            apiInformationClicks: ArrayReduceClicks(e),
+          });
         })
         .catch((e) => console.log(e, "caiu no catch"));
     }

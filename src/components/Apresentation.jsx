@@ -17,14 +17,14 @@ const Apresentation = () => {
     setSlides,
   } = useContext(context);
 
-
+  
   return (
     <div className="flex w-full">
       <div className="flex flex-col items-center px-1 w-10 pt-2 justify-start">
         <img
           onClick={() => {
-            setApresentation(!apresentation)
-            setState({ ...state, image: '' })
+            setApresentation(!apresentation);
+            setState({ ...state, image: "" });
           }}
           className="cursor-pointer"
           src={menu}
@@ -92,6 +92,8 @@ const Apresentation = () => {
                         fontSize: "font-xl",
                         fontColor: "black",
                         fontWeight: "normal",
+                        apiInformationClicks: null,
+                        apiInformationImpressions: null,
                       };
                       setSlides([...slides, resetState]);
                       return setIndexPreview(indexPreview + 1);
