@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import context from "../context/context";
 
 const Header = () => {
-  const { campanhas, empresas, request, setRequest, handleChangeId } =
+  const { campanhas, empresas, request, handleChangeId } =
     useContext(context);
 
   return (
