@@ -5,9 +5,9 @@ import PropTypes from "prop-types";
 const ProviderPowerPoint = ({ children }) => {
   const [state, setState] = useState({
     id: 1,
-    pageName: "",
     image: "",
-    template: "flex justify-start items-start",
+    textTemplate: "flex justify-start items-start",
+    chartTemplate: "flex justify-start items-center",
     text: "",
     fontSize: "font-xl",
     fontColor: "black",
@@ -19,7 +19,7 @@ const ProviderPowerPoint = ({ children }) => {
   const [preview, setPreview] = useState([]);
   const [indexPreview, setIndexPreview] = useState(1);
   const [apresentation, setApresentation] = useState(true);
-  const [editPageName, setEditPageName] = useState(false);
+  // const [editPageName, setEditPageName] = useState(false);
   const [slides, setSlides] = useState([state]);
   const [slideEditor, setSlideEditor] = useState(state);
   const [resetState, setResetState] = useState(state);
@@ -44,12 +44,12 @@ const ProviderPowerPoint = ({ children }) => {
     if (target.name === "image") {
       const file = target.files[0];
       const reader = new FileReader();
-
       reader.addEventListener("load", function (e) {
         const readerTarget = e.target;
         setState({ ...state, image: readerTarget.result });
       });
       reader.readAsDataURL(file);
+      console.log("target.result", reader.readAsDataURL(file));
     }
   };
 
@@ -129,7 +129,6 @@ const ProviderPowerPoint = ({ children }) => {
       }
       requestCampanha();
     }
-    console.log(request.empresasId);
   }, [request.empresasId]);
 
   useEffect(() => {
@@ -228,8 +227,7 @@ const ProviderPowerPoint = ({ children }) => {
             });
             setRequest({ ...request, empresasId: "0" });
             setRequest({ ...request, campanhaId: "0" });
-          })
-          .catch((e) => console.log(e, "caiu no catch"));
+          });
       }
     }
     semanaImpressions();
@@ -249,8 +247,8 @@ const ProviderPowerPoint = ({ children }) => {
     setIndexPreview,
     apresentation,
     setApresentation,
-    editPageName,
-    setEditPageName,
+    // editPageName,
+    // setEditPageName,
     slideEditor,
     setSlideEditor,
     handleChangeId,

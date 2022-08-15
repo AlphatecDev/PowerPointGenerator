@@ -4,6 +4,7 @@ import rigth from "../images/seta-direita.png";
 import left from "../images/seta-esquerda.png";
 import menu from "../images/menu.png";
 import mais from "../images/mais.png";
+import download from "../images/download-solid.svg";
 
 const Apresentation = () => {
   const {
@@ -17,7 +18,6 @@ const Apresentation = () => {
     setSlides,
   } = useContext(context);
 
-  
   return (
     <div className="flex w-full">
       <div className="flex flex-col items-center px-1 w-10 pt-2 justify-start">
@@ -85,9 +85,9 @@ const Apresentation = () => {
                     if (indexPreview === slides.length) {
                       const resetState = {
                         id: indexPreview + 1,
-                        pageName: "",
                         image: "",
-                        template: "flex justify-start items-start",
+                        textTemplate: "flex justify-start items-start",
+                        chartTemplate: "flex justify-start items-center",
                         text: "",
                         fontSize: "font-xl",
                         fontColor: "black",
@@ -121,6 +121,12 @@ const Apresentation = () => {
                 />
               </div>
             )}
+            <img
+              className="cursor-pointer"
+              src={download}
+              width="50px"
+              alt="botao de download"
+            />
           </div>
         </div>
       </div>

@@ -5,26 +5,28 @@ const Preview = () => {
   const { slides, indexPreview } = useContext(context);
 
   return (
-    <div className="w-full h-full">
-      <div className="h-10 flex items-center justify-center">
-        <p className="text-xl text-center">{slides[indexPreview - 1].pageName}</p>
-      </div>
-      <div className="h-90 w-full flex justify-center items-center pb-16">
+    <div className="w-full flex h-full items-center justify-center">
+      <div className="w-full flex flex-col items-center justify-center pb-[50px]">
         <div
           style={{
             backgroundImage: `url(${slides[indexPreview - 1].image})`,
             backgroundSize: "100% 100%",
             backgroundRepeat: "no-repeat",
           }}
-          className={`w-pw ${slides[indexPreview - 1].template} bg-contain border border-gray-300 h-ph`}
+          className={`w-[720px] ${
+            slides[indexPreview - 1].textTemplate
+          } bg-contain border border-gray-300 my-auto h-[480px]`}
         >
           <p
-            className={`${slides[indexPreview - 1].fontWeight} ${slides[indexPreview - 1].fontColor} ${slides[indexPreview - 1].fontSize}
+            className={`${slides[indexPreview - 1].fontWeight} ${
+              slides[indexPreview - 1].fontColor
+            } ${slides[indexPreview - 1].fontSize}
             break-all text-clip overflow-hidden	`}
           >
             {slides[indexPreview - 1].text}
           </p>
         </div>
+        <p>{`${indexPreview}/${slides.length}`}</p>
       </div>
     </div>
   );

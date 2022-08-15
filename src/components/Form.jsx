@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import context from "../context/context";
 import menu from "../images/menu.png";
 
@@ -6,21 +6,16 @@ const Form = () => {
   const {
     state,
     setState,
-    template,
-    text,
-    fontSize,
-    fontColor,
-    fontWeight,
     handleChange,
     apresentation,
     setApresentation,
-    editPageName,
-    setEditPageName,
     indexPreview,
     slides,
     setSlideEditor,
     slideEditor,
   } = useContext(context);
+
+  const [text, setText] = useState("");
 
   const handleChangeImage = (target) => {
     const file = target.files[0];
@@ -39,7 +34,7 @@ const Form = () => {
         <img
           onClick={() => {
             setApresentation(!apresentation);
-            setState({ ...state, pageName: "", image: "" });
+            setState({ ...state, image: "" });
           }}
           className="cursor-pointer"
           src={menu}
@@ -47,169 +42,107 @@ const Form = () => {
           width="25px"
         />
       </div>
-      <hr className="border border-gray-600 my-2" />
+      <hr className="border border-gray-600 bg-black my-2" />
+
+      <div className="flex flex-col">
+        <label className="mb-1">Chart template</label>
+        <select
+          className="outline-none cursor-pointer py-2 border border-gray-300 rounded-lg mb-3"
+          type="text"
+          name="chartTemplate"
+          value={state.chartTemplate}
+          onChange={(e) => handleChange(e)}
+        >
+          <option value="flex justify-start items-center">left</option>
+          <option value="flex justify-center items-center">center</option>
+          <option value="flex justify-end items-center">rigth</option>
+        </select>
+      </div>
 
       <div className="flex w-full">
         <div className="flex flex-col mr-4">
-          <label className="mb-1">Nome Da Página</label>
-          {editPageName ? (
-            <input
-              className="outline-none text-center cursor-pointer py-1 border
-                border-gray-300 rounded-lg mb-3"
-              type="text"
-              value={state.pageName}
-              name="pageName"
-              placeholder={editPageName && "Editar nome da página"}
-              onChange={(e) => handleChange(e)}
-              onClick={() => {
-                setEditPageName(!editPageName);
-              }}
-            />
-          ) : (
-            <input
-              className="outline-none text-center cursor-pointer py-1 border
+          <label className="mb-1">Text</label>
+
+          <input
+            className="outline-none text-center cursor-pointer py-1 border
               border-gray-300 rounded-lg mb-3"
-              type="text"
-              name="pageName"
-              value={slides[indexPreview - 1].pageName}
-              disabled={editPageName}
-              onChange={(e) => handleChange(e)}
-            />
-          )}
+            type="text"
+            name="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Type a text"
+          />
         </div>
+
         <div className="w-1/6 h-full flex items-center pt-4 justify-end">
-          {editPageName ? (
-            <input
-              id="clear"
-              className="border bg-red-500 border-gray-500 py-1 px-3
-                rounded-md hover:bg-red-600 duration-500
-                cursor-pointer"
-              type="button"
-              value="X"
-              onChange={(e) =>
-                handleChange({ ...state, pageName: e.target.value })
-              }
-              onClick={() => {
-                setEditPageName(!editPageName);
-              }}
-            />
-          ) : (
-            <input
-              id="clear"
-              className="border bg-green-500 border-gray-500 py-1 px-3
+          <input
+            className="border bg-green-500 border-gray-500 py-1 px-3
               rounded-md hover:bg-green-600 duration-500
               cursor-pointer"
-              type="button"
-              value="X"
-              onClick={() => {
-                setEditPageName(!editPageName);
-                  const findIndex = slides.find(({ id }) => id === indexPreview);
-                  findIndex["pageName"] = state.pageName;
-                  setEditPageName(!editPageName);
-                  setState({ ...state, pageName: '' })
-              }}
-            />
-          )}
-        </div>
-        {/* <div className="w-1/6 h-full flex items-center pt-4 justify-end">
-          <input
-            id="clear"
-            className="border bg-red-500 border-gray-500 py-1 px-3
-                rounded-md hover:bg-red-600 duration-500
-                cursor-pointer"
             type="button"
             value="X"
-            onChange={(e) =>
-              handleChange({ ...state, pageName: e.target.value })
-            }
             onClick={() => {
               const findIndex = slides.find(({ id }) => id === indexPreview);
-              findIndex["pageName"] = state.pageName;
-              setEditPageName(!editPageName);
-              setState({ ...state, pageName: '' })
+              findIndex["text"] = text;
+              setSlideEditor({ ...slideEditor, text: text });
+              setState({ ...state, text });
+              setText("");
             }}
           />
-        </div> */}
+        </div>
       </div>
 
       <div className="flex flex-col">
-        <label className="mb-1">Texto</label>
-        <input
-          className="outline-none text-center cursor-pointer py-1 border border-gray-300 rounded-lg mb-3"
-          type="text"
-          name="text"
-          value={text}
-          onChange={(e) => handleChange(e)}
-        />
-      </div>
-
-      <div className="flex flex-col">
-        <label className="mb-1">Template</label>
+        <label className="mb-1">Text template</label>
         <select
           className="outline-none cursor-pointer py-2 border border-gray-300 rounded-lg mb-3"
-          name="template"
-          value={template}
+          name="textTemplate"
+          value={state.textTemplate}
           onChange={(e) => handleChange(e)}
         >
-          <option value="flex justify-start items-start">
-            canto superior esquerdo
-          </option>
-          <option value="flex justify-center">centro superior</option>
-          <option value="flex justify-end">canto superior direito</option>
-          <option value="flex justify-start items-center">
-            centro esquerdo
-          </option>
-          <option value="flex justify-center items-center">centro</option>
-          <option value="flex justify-end items-center">centro direito</option>
-          <option value="flex justify-start items-end">
-            canto inferior esquerdo
-          </option>
-          <option value="flex justify-center items-end">centro inferior</option>
-          <option value="flex justify-end items-end">
-            canto inferior direito
-          </option>
+          <option value="flex justify-start items-start">left</option>
+          <option value="flex justify-center">center</option>
+          <option value="flex justify-end">rigth</option>
         </select>
       </div>
 
       <div className="flex flex-col">
-        <label className="mb-1">Tamanho da Fonte</label>
+        <label className="mb-1">Font size</label>
         <select
           className="outline-none cursor-pointer py-2 border border-gray-300 rounded-lg mb-3"
           name="fontSize"
-          value={fontSize}
+          value={state.fontSize}
           onChange={(e) => handleChange(e)}
         >
-          <option value="text-xl">pequeno</option>
-          <option value="text-2xl">médio</option>
-          <option value="text-3xl">normal</option>
-          <option value="text-4xl">grande</option>
-          <option value="text-5xl">extra-grande</option>
+          <option value="text-xl">small</option>
+          <option value="text-2xl">normal</option>
+          <option value="text-3xl">big</option>
         </select>
       </div>
 
       <div className="flex flex-col">
-        <label className="mb-1">Cor Da Fonte</label>
+        <label className="mb-1">Font color</label>
         <select
           className="outline-none cursor-pointer py-2 border border-gray-300 rounded-lg mb-3"
           name="fontColor"
-          value={fontColor}
+          value={state.fontColor}
           onChange={(e) => handleChange(e)}
         >
-          <option value="text-black">preto</option>
-          <option value="text-white">branco</option>
+          <option value="text-black">black</option>
+          <option value="text-white">white</option>
         </select>
       </div>
 
       <div className="flex flex-col">
-        <label className="mb-1">Peso da Fonte</label>
+        <label className="mb-1">Font Weight</label>
         <select
           className="outline-none cursor-pointer py-2 border border-gray-300 rounded-lg mb-3"
           name="fontWeight"
-          value={fontWeight}
+          value={state.fontWeight}
           onChange={(e) => handleChange(e)}
         >
           <option value="normal">normal</option>
-          <option value="font-bold">negrito</option>
+          <option value="font-bold">bold</option>
         </select>
       </div>
 
@@ -222,7 +155,7 @@ const Form = () => {
             htmlFor="arquivo"
             onClick={() => setSlideEditor({ ...slideEditor, image: "" })}
           >
-            ENVIAR ARQUIVO
+            SEND FILE
           </label>
           <input
             id="arquivo"
@@ -241,10 +174,10 @@ const Form = () => {
             type="button"
             value="X"
             onClick={() => {
-              // setSlideEditor({ ...slideEditor, image: "" })
               const findIndex = slides.find(({ id }) => id === indexPreview);
               findIndex["image"] = "";
-              setState({ ...state, image: "" });
+              setSlideEditor({ ...slideEditor, image: "" });
+              setState({ ...state, image: slideEditor.image });
             }}
           />
         </div>
