@@ -13,7 +13,7 @@ const Preview = () => {
         <div
           style={{
             backgroundImage: `url(${slides[indexPreview - 1].image})`,
-            backgroundSize: "768px 432px",
+            backgroundSize: "100% 100%",
             backgroundRepeat: "no-repeat",
           }}
           className={`w-pw ${slides[indexPreview - 1].template} bg-contain border border-gray-300 h-ph`}

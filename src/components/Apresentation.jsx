@@ -57,7 +57,7 @@ const Apresentation = () => {
           <div
             style={{
               backgroundImage: `url(${slides[indexPreview - 1].image})`,
-              backgroundSize: "934px 540px",
+              backgroundSize: "100% 100%",
               backgroundRepeat: "no-repeat",
             }}
             className={`w-full ${
