@@ -23,7 +23,7 @@ const Header = () => {
           name="empresasId"
           onChange={(e) => handleChangeId(e)}
         >
-          <option>Choice a client</option>
+          <option value={request.empresasId}>Choice a client</option>
           {empresas &&
             empresas.map((empresa, index) => (
               <option key={index} value={empresa.id}>
@@ -47,7 +47,7 @@ const Header = () => {
           name="campanhaId"
           onChange={(e) => handleChangeId(e)}
         >
-          <option>Choice a campaign</option>
+          <option value={request.campanhaId}>Choice a campaign</option>
           {campanhas &&
             campanhas.map((campanha, index) => (
               <option key={index} value={campanha.id}>

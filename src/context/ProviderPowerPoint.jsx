@@ -26,8 +26,8 @@ const ProviderPowerPoint = ({ children }) => {
   const [empresas, setEmpresas] = useState([]);
   const [campanhas, setCampanhas] = useState([]);
   const [request, setRequest] = useState({
-    empresasId: null,
-    campanhaId: null,
+    empresasId: "0",
+    campanhaId: "0",
   });
 
   const handleChange = ({ target }) => {
@@ -112,9 +112,6 @@ const ProviderPowerPoint = ({ children }) => {
   useEffect(() => {
     if (request.empresasId) {
       async function requestCampanha() {
-        function appendCampanhas(data) {
-          setCampanhas(...campanhas, data);
-        }
         await fetch(
           `https://datasend.orquestraerp.com/api/Campanhas/ObterCampanhaPorEmpresa?empresaId=${request.empresasId}`,
           {
@@ -125,7 +122,10 @@ const ProviderPowerPoint = ({ children }) => {
           }
         )
           .then((e) => e.json())
-          .then((e) => appendCampanhas(e.data));
+          .then((e) => {
+            setCampanhas(e.data);
+            // setRequest({ ...request, empresasId: null });
+          });
       }
       requestCampanha();
     }
@@ -208,25 +208,29 @@ const ProviderPowerPoint = ({ children }) => {
         domingo: 0,
       };
 
-      await fetch(
-        `https://datasend.orquestraerp.com/api/DadosYahoo/ObterDadosPorEmpresaCampanha?empresaId=${request.empresasId}&campanhaId=${request.campanhaId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
-          },
-        }
-      )
-        .then((e) => e.json())
-        .then((e) => e.data)
-        .then((e) => {
-          setState({
-            ...state,
-            apiInformationImpressions: ArrayReduceImpressions(e),
-            apiInformationClicks: ArrayReduceClicks(e),
-          });
-        })
-        .catch((e) => console.log(e, "caiu no catch"));
+      if (request.empresasId !== "0" && request.campanhaId !== "0") {
+        await fetch(
+          `https://datasend.orquestraerp.com/api/DadosYahoo/ObterDadosPorEmpresaCampanha?empresaId=${request.empresasId}&campanhaId=${request.campanhaId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${window.sessionStorage.getItem("token")}`,
+            },
+          }
+        )
+          .then((e) => e.json())
+          .then((e) => e.data)
+          .then((e) => {
+            setState({
+              ...state,
+              apiInformationImpressions: ArrayReduceImpressions(e),
+              apiInformationClicks: ArrayReduceClicks(e),
+            });
+            setRequest({ ...request, empresasId: "0" });
+            setRequest({ ...request, campanhaId: "0" });
+          })
+          .catch((e) => console.log(e, "caiu no catch"));
+      }
     }
     semanaImpressions();
   }, [request.campanhaId]);
